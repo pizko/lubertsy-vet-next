@@ -1,6 +1,7 @@
 // 02 — Переключатель «Кошки / Собаки»: шейдерный переход-растворение с displacement,
 // перетаскивание (drag/swipe) управляет прогрессом перехода напрямую.
 import gsap from 'gsap';
+import { u as withBase } from '../data';
 import { createGL, makeProgram, loadTexture, resize, visibleLoop, NOISE, type Tex } from '../gl/gl';
 
 const FS = /* glsl */ `
@@ -129,8 +130,8 @@ export function initSpecies() {
   try { prog = makeProgram(gl, FS); } catch (err) { console.warn(err); return; }
   const small = window.innerWidth < 900;
   Promise.all([
-    loadTexture(gl, `/img/cat-tabby-${small ? 900 : 1800}.webp`),
-    loadTexture(gl, `/img/dog-beagle-${small ? 900 : 1800}.webp`),
+    loadTexture(gl, withBase(`/img/cat-tabby-${small ? 900 : 1800}.webp`)),
+    loadTexture(gl, withBase(`/img/dog-beagle-${small ? 900 : 1800}.webp`)),
   ]).then(([cat, dog]: Tex[]) => {
     sec.classList.add('has-gl');
     const { u } = prog;

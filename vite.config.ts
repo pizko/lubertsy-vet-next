@@ -1,13 +1,31 @@
 import { defineConfig, type Plugin } from 'vite';
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { SERVICES } from './src/data.ts';
+import { SERVICES, setBase } from './src/data.ts';
 import {
   renderServiceRows, renderPrices, renderPriceCats, renderStory, renderStoryText,
   renderDistrictList, renderServiceFooterLinks, renderServicePage,
 } from './src/render.ts';
 
 // Пререндер контента из src/data.ts прямо в HTML: поисковики видят полноценную разметку без JS.
+// База для GitHub Pages: BASE=/lubertsy-vet-next/ npm run build
+const BASE = process.env.BASE || '/';
+setBase(BASE);
+
+// Префикс базы для корневых ссылок в HTML (href/src/srcset), которые Vite не переписывает сам.
+const withBase = (html: string) => {
+  if (BASE === '/') return html;
+  const b = BASE.replace(/^\/|\/$/g, '');
+  const skip = `(?!/|${b}/)`;
+  return html
+    .replace(new RegExp(`((?:href|src|content)=")/${skip}`, 'g'), `$1${BASE}`)
+    .replace(new RegExp(`((?:srcset|imagesrcset)="[^"]*)`, 'g'), m => m.replace(new RegExp(`(^|[",]\\s*|="?)/${skip}`, 'g'), `$1${BASE}`));
+};
+
+function basePaths(): Plugin {
+  return { name: 'vet-base-paths', transformIndexHtml: { order: 'post', handler: withBase } };
+}
+
 function prerender(): Plugin {
   let outDir = 'dist';
   return {
@@ -38,12 +56,15 @@ function prerender(): Plugin {
         mkdirSync(dir, { recursive: true });
         writeFileSync(resolve(dir, 'index.html'), page);
       }
+      // GitHub Pages: неизвестные адреса отдают главную
+      writeFileSync(resolve(outDir, '404.html'), base);
     },
   };
 }
 
 export default defineConfig({
-  plugins: [prerender()],
+  base: BASE,
+  plugins: [prerender(), basePaths()],
   server: { port: 5199 },
   preview: { port: 5199 },
 });

@@ -1,6 +1,14 @@
 // Единый источник контента. Все тексты, услуги и цены — с действующего сайта люберцы-вет.рф.
 // Используется и в браузере, и в Vite-плагине для пререндера HTML (SEO).
 
+// Базовый путь сайта: '/' локально, '/lubertsy-vet-next/' на GitHub Pages.
+let BASE = '/';
+export const setBase = (b: string) => { BASE = b.endsWith('/') ? b : b + '/'; };
+/** Абсолютный путь с учётом базы: u('/img/x.webp') → '/base/img/x.webp' */
+export const u = (p: string) => BASE + p.replace(/^\//, '');
+/** Путь относительно базы: '/base/services/x' → '/services/x' */
+export const rel = (p: string) => (p.startsWith(BASE) ? '/' + p.slice(BASE.length) : p);
+
 export const CONTACT = {
   phone: '+7 (916) 731-49-07',
   tel: 'tel:+79167314907',

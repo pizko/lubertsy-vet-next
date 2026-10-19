@@ -1,9 +1,9 @@
 // Чистые функции рендера в строку HTML: работают и в Node (пререндер для SEO), и в браузере (роутер).
-import { SERVICES, PRICES, PRICE_CATS, DISTRICTS, STEPS, CONTACT, fmtPrice, type Service } from './data.ts';
+import { SERVICES, PRICES, PRICE_CATS, DISTRICTS, STEPS, CONTACT, fmtPrice, u, type Service } from './data.ts';
 
 const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const img = (name: string, alt: string, cls = '', sizes = '(max-width: 768px) 100vw, 50vw', eager = false) =>
-  `<img class="${cls}" src="/img/${name}-900.webp" srcset="/img/${name}-900.webp 900w, /img/${name}-1800.webp 1800w" sizes="${sizes}" alt="${esc(alt)}" ${eager ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async">`;
+  `<img class="${cls}" src="${u(`/img/${name}-900.webp`)}" srcset="${u(`/img/${name}-900.webp`)} 900w, ${u(`/img/${name}-1800.webp`)} 1800w" sizes="${sizes}" alt="${esc(alt)}" ${eager ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async">`;
 
 export const ARROW = `<svg class="ico-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 18 18 6M8 6h10v10" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>`;
 
@@ -24,7 +24,7 @@ export function renderServiceRows(): string {
           <p class="svc__lead">${esc(s.lead)}</p>
           <dl class="svc__dl">${s.blocks.slice(0, 2).map(b => `<div><dt>${esc(b.h)}</dt><dd>${esc(b.p)}</dd></div>`).join('')}</dl>
           <div class="svc__actions">
-            <a class="btn btn--dark" href="/services/${s.slug}" data-route data-cursor="link"><span>Подробнее об услуге</span>${ARROW}</a>
+            <a class="btn btn--dark" href="${u(`/services/${s.slug}`)}" data-route data-cursor="link"><span>Подробнее об услуге</span>${ARROW}</a>
             <a class="btn btn--ghost" href="${CONTACT.tel}"><span>Уточнить по телефону</span></a>
           </div>
         </div>
@@ -70,7 +70,7 @@ export function renderDistrictList(): string {
 }
 
 export function renderServiceFooterLinks(): string {
-  return SERVICES.map(s => `<li><a href="/services/${s.slug}" data-route>${esc(s.title)}</a></li>`).join('');
+  return SERVICES.map(s => `<li><a href="${u(`/services/${s.slug}`)}" data-route>${esc(s.title)}</a></li>`).join('');
 }
 
 export function renderServicePage(s: Service): string {
@@ -79,7 +79,7 @@ export function renderServicePage(s: Service): string {
   return `
   <article class="sp" data-slug="${s.slug}">
     <header class="sp__hero">
-      <nav class="sp__crumbs mono" aria-label="Хлебные крошки"><a href="/" data-route>Главная</a><span>/</span><a href="/#services" data-route>Услуги</a><span>/</span><span aria-current="page">${esc(s.title)}</span></nav>
+      <nav class="sp__crumbs mono" aria-label="Хлебные крошки"><a href="${u('/')}" data-route>Главная</a><span>/</span><a href="${u('/#services')}" data-route>Услуги</a><span>/</span><span aria-current="page">${esc(s.title)}</span></nav>
       <p class="sp__num" aria-hidden="true">${s.num}</p>
       <h1 class="sp__h1">${esc(s.h1)}</h1>
       <p class="sp__lead">${esc(s.lead)}</p>
@@ -96,7 +96,7 @@ export function renderServicePage(s: Service): string {
       </aside>
     </div>
     <p class="sp__note"><b>Важно:</b> информация на странице носит справочный характер и не заменяет очный ветеринарный осмотр.</p>
-    <a class="sp__next" href="/services/${next.slug}" data-route data-cursor="link">
+    <a class="sp__next" href="${u(`/services/${next.slug}`)}" data-route data-cursor="link">
       <span class="mono">Следующая услуга — ${next.num}</span>
       <span class="sp__next-title">${esc(next.title)} ${ARROW}</span>
     </a>

@@ -3,7 +3,7 @@
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import type Lenis from 'lenis';
-import { SERVICES } from '../data';
+import { SERVICES, rel } from '../data';
 import { renderServicePage } from '../render';
 
 const HOME_TITLE = document.title;
@@ -22,7 +22,7 @@ export function initRouter(lenis: Lenis | null, reduce: boolean, hooks: Hooks) {
   let homeScroll = 0;
   let busy = false;
 
-  const slugOf = (path: string) => path.match(/^\/services\/([\w-]+)\/?$/)?.[1];
+  const slugOf = (path: string) => rel(path).match(/^\/services\/([\w-]+)\/?$/)?.[1];
   const scrollTo = (target: string | number, immediate = false) => {
     if (lenis) lenis.scrollTo(target as never, { immediate, offset: 0, duration: 1.6 });
     else if (typeof target === 'number') window.scrollTo(0, target);

@@ -11,6 +11,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SplitText } from 'gsap/SplitText';
 import { Flip } from 'gsap/Flip';
 import Lenis from 'lenis';
+import { setBase, rel } from './data';
 
 import { runIntro, initHero } from './modules/hero';
 import { initSpecies } from './modules/species';
@@ -23,6 +24,7 @@ import { initScenes } from './modules/scenes';
 import { initRouter } from './modules/router';
 import { initCursor, initMagnetic, initReveals, initHeader, initMenu } from './modules/ui';
 
+setBase(import.meta.env.BASE_URL);
 gsap.registerPlugin(ScrollTrigger, SplitText, Flip);
 history.scrollRestoration = 'manual';
 
@@ -44,7 +46,7 @@ function safe(name: string, fn: () => void) {
 }
 
 async function boot() {
-  const isPage = root.dataset.route === 'page' || /^\/services\/[\w-]+/.test(location.pathname);
+  const isPage = root.dataset.route === 'page' || /^\/services\/[\w-]+/.test(rel(location.pathname));
   const homeReal = !document.querySelector('.home-view[data-stub]');
 
   let hero = { enter: () => {} };

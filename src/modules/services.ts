@@ -1,6 +1,7 @@
 // 03 — Каталог услуг: строки-аккордеон + плавающее WebGL-превью у курсора,
 // которое искажается волной и RGB-сдвигом пропорционально скорости движения.
 import gsap from 'gsap';
+import { u as withBase } from '../data';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { createGL, makeProgram, loadTexture, resize, NOISE, lowPower, type Tex } from '../gl/gl';
 
@@ -79,7 +80,7 @@ export function initServices() {
   gl.uniform1i(u('t0'), 0); gl.uniform1i(u('t1'), 1);
 
   const tex = new Map<string, Promise<Tex>>();
-  const get = (name: string) => { if (!tex.has(name)) tex.set(name, loadTexture(gl, `/img/${name}-900.webp`)); return tex.get(name)!; };
+  const get = (name: string) => { if (!tex.has(name)) tex.set(name, loadTexture(gl, withBase(`/img/${name}-900.webp`))); return tex.get(name)!; };
   const st = { x: 0, y: 0, tx: 0, ty: 0, vx: 0, vy: 0, reveal: 1, mix: 0, active: false };
   let cur: Tex | null = null, next: Tex | null = null, raf = 0, curName = '';
 

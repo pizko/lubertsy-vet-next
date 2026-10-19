@@ -13,6 +13,12 @@ npm run preview    # просмотр сборки
 
 `?nointro` в адресе пропускает интро-прелоадер (удобно при разработке).
 
+### GitHub Pages
+
+Сборка под подпапку: `BASE=/lubertsy-vet-next/ npm run build`. Workflow `.github/workflows/pages.yml`
+собирает и публикует сайт при каждом пуше в `main`. Файл `index.html` нельзя открыть двойным кликом —
+нужен сервер (`npm run dev` или `npm run preview`).
+
 ## Стек
 
 Vite + TypeScript без фреймворка. GSAP (ScrollTrigger, SplitText, Flip), Lenis, собственное ядро WebGL
